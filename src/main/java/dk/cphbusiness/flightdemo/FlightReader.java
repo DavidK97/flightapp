@@ -57,9 +57,16 @@ public class FlightReader {
              */
 
             //Opgave 5
+            /*
             System.out.println("------------------ Opgave 5: -----------------");
             List<FlightInfoDTO> result6 = allFlightsSortedByArrivalTime(flightInfoDTOList);
             result6.forEach(System.out::println);
+             */
+
+            //Opgave 6
+            System.out.println("------------------ Opgave 6: -----------------");
+            Map<String, Double> result7 = flightTimeByEachAirline(flightInfoDTOList);
+            System.out.println(result7);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -153,5 +160,17 @@ public class FlightReader {
                 .sorted(Comparator.comparing(f -> f.getArrival()))
                 .collect(Collectors.toList());
     }
+
+    //Opgave 6
+    //TODO Map<String, Double> -> groupBy
+
+    public static Map<String, Double> flightTimeByEachAirline (List<FlightInfoDTO> flightInfoList) {
+        return flightInfoList.stream()
+                .filter(f -> f.getAirline() != null)
+                .collect(Collectors.groupingBy(FlightInfoDTO::getAirline,
+                        Collectors.summingDouble(f -> f.getDuration().toHours())));
+    }
+
 }
+
 
