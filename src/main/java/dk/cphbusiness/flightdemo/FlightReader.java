@@ -64,9 +64,17 @@ public class FlightReader {
              */
 
             //Opgave 6
+            /*
             System.out.println("------------------ Opgave 6: -----------------");
             Map<String, Double> result7 = flightTimeByEachAirline(flightInfoDTOList);
             System.out.println(result7);
+
+             */
+
+            //Opgave 7
+            System.out.println("------------------ Opgave 7: -----------------");
+            List<FlightInfoDTO> result8 = flightsSortedByDuration(flightInfoDTOList);
+            result8.forEach(System.out::println);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -169,6 +177,20 @@ public class FlightReader {
                 .filter(f -> f.getAirline() != null)
                 .collect(Collectors.groupingBy(FlightInfoDTO::getAirline,
                         Collectors.summingDouble(f -> f.getDuration().toHours())));
+    }
+
+
+    //Opgave 7
+    //TODO List -> sorted(Compartor) -> collect
+
+    public static List<FlightInfoDTO> flightsSortedByDuration (List<FlightInfoDTO> flightInfoList) {
+        return flightInfoList.stream()
+                .filter(f -> f.getAirline() != null)
+                .filter(f -> f.getDuration().toMinutes() > 0)
+                .sorted(Comparator.comparingDouble(f -> f.getDuration().toMinutes()))
+                .collect(Collectors.toList());
+
+        //Resultat er duration=PT30M, hvor P = Period og T = Time
     }
 
 }
