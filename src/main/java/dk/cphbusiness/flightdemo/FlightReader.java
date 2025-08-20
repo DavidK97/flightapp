@@ -23,7 +23,7 @@ public class FlightReader {
         try {
             List<FlightDTO> flightList = getFlightsFromFile("flights.json");
             List<FlightInfoDTO> flightInfoDTOList = getFlightInfoDetails(flightList);
-            flightInfoDTOList.forEach(System.out::println);
+            //flightInfoDTOList.forEach(System.out::println);
 
             //Opgave 4.1
             Double result = totalFlightDurationByAirline(flightInfoDTOList, "Royal Jordanian");
@@ -42,11 +42,24 @@ public class FlightReader {
              */
 
             //Opgave 3
+            /*
             System.out.println("Opgave 3: ");
             List<FlightInfoDTO> result4 = sortByDepatureTime(flightInfoDTOList,
                     LocalDateTime.parse("2024-08-15T10:05:00"));
             result4.forEach(System.out::println);
-            System.out.println("Opgave 3 slut");
+             */
+
+            //Opgave 4
+            /*
+            System.out.println("Opgave 4:" );
+            Map<String, Double> result5 = averageFlightTimeForAllAirlines(flightInfoDTOList);
+            System.out.println(result5);
+             */
+
+            //Opgave 5
+            System.out.println("------------------ Opgave 5: -----------------");
+            List<FlightInfoDTO> result6 = allFlightsSortedByArrivalTime(flightInfoDTOList);
+            result6.forEach(System.out::println);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,7 +109,7 @@ public class FlightReader {
                 .filter(f -> f.getAirline() != null)
                 .filter(f -> f.getAirline().equals(airlineName))
                 .mapToDouble(f -> f.getDuration().toMinutes())
-                .sum()/60;
+                .sum() / 60;
     }
 
     //Opgave 1
@@ -109,7 +122,7 @@ public class FlightReader {
     }
 
     //Opgave 2
-    public static List<FlightInfoDTO> flightBetween2Airports (List<FlightInfoDTO> flightInfoList, String origin, String destination) {
+    public static List<FlightInfoDTO> flightBetween2Airports(List<FlightInfoDTO> flightInfoList, String origin, String destination) {
         return flightInfoList.stream()
                 .filter(f -> f.getOrigin() != null)
                 .filter(f -> f.getOrigin().equalsIgnoreCase(origin))
@@ -118,11 +131,27 @@ public class FlightReader {
     }
 
     //Opgave 3
-    public static List<FlightInfoDTO> sortByDepatureTime (List<FlightInfoDTO> flightInfoList, LocalDateTime time) {
+    public static List<FlightInfoDTO> sortByDepatureTime(List<FlightInfoDTO> flightInfoList, LocalDateTime time) {
         return flightInfoList.stream()
                 .filter(f -> f.getDeparture().isAfter(time))
                 .collect(Collectors.toList());
     }
 
+    //Opgave 4
+    public static Map<String, Double> averageFlightTimeForAllAirlines(List<FlightInfoDTO> flightInfoList) {
+        return flightInfoList.stream()
+                .filter(f -> f.getAirline() != null)
+                .collect(Collectors.groupingBy(FlightInfoDTO::getAirline,
+                        Collectors.averagingDouble(f -> f.getDuration().toMinutes())));
+    }
 
+    //Opgave 5
+    //TODO List -> sorted() ud fra arrivaltime
+
+    public static List<FlightInfoDTO> allFlightsSortedByArrivalTime(List<FlightInfoDTO> flighInfoList) {
+        return flighInfoList.stream()
+                .sorted(Comparator.comparing(f -> f.getArrival()))
+                .collect(Collectors.toList());
+    }
 }
+
