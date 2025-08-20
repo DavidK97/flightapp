@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Purpose:
@@ -28,9 +29,15 @@ public class FlightReader {
             Double result = totalFlightDurationByAirline(flightInfoDTOList, "Royal Jordanian");
             System.out.println("Opgave 4.1: " + result + " timer");
 
-            //Opgave 4.2
+            //Opgave 1
             Double result2 = averageFlightTimeByAirline(flightInfoDTOList, "Royal Jordanian");
-            System.out.println("Opgave 4.2: " + result2 + " minutter");
+            System.out.println("Opgave 1: " + result2 + " minutter");
+
+            //Opgave 2
+            List<FlightInfoDTO> result3 = flightBetween2Airports(flightInfoDTOList,
+                    "King Hussein International", "Queen Alia International");
+            result3.forEach(System.out::println);
+
 
 
         } catch (IOException e) {
@@ -75,7 +82,7 @@ public class FlightReader {
     }
 
 
-
+    //Opgave 4.1
     public static Double totalFlightDurationByAirline(List<FlightInfoDTO> flightInfoList, String airlineName) {
         return flightInfoList.stream()
                 .filter(f -> f.getAirline() != null)
@@ -84,11 +91,21 @@ public class FlightReader {
                 .sum()/60;
     }
 
+    //Opgave 1
     public static Double averageFlightTimeByAirline(List<FlightInfoDTO> flightInfoList, String airlineName) {
         return flightInfoList.stream()
                 .filter(f -> f.getAirline() != null)
                 .filter(f -> f.getAirline().equals(airlineName))
                 .mapToDouble(f -> f.getDuration().toMinutes())
                 .average().orElse(0.0);
+    }
+
+    //Opgave 2
+    public static List<FlightInfoDTO> flightBetween2Airports (List<FlightInfoDTO> flightInfoList, String origin, String destination) {
+        return flightInfoList.stream()
+                .filter(f -> f.getOrigin() != null)
+                .filter(f -> f.getOrigin().equalsIgnoreCase(origin))
+                .filter(f -> f.getDestination().equalsIgnoreCase(destination))
+                .collect(Collectors.toList());
     }
 }
