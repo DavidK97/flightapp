@@ -34,11 +34,19 @@ public class FlightReader {
             System.out.println("Opgave 1: " + result2 + " minutter");
 
             //Opgave 2
+            /*
             List<FlightInfoDTO> result3 = flightBetween2Airports(flightInfoDTOList,
                     "King Hussein International", "Queen Alia International");
             result3.forEach(System.out::println);
 
+             */
 
+            //Opgave 3
+            System.out.println("Opgave 3: ");
+            List<FlightInfoDTO> result4 = sortByDepatureTime(flightInfoDTOList,
+                    LocalDateTime.parse("2024-08-15T10:05:00"));
+            result4.forEach(System.out::println);
+            System.out.println("Opgave 3 slut");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,4 +116,13 @@ public class FlightReader {
                 .filter(f -> f.getDestination().equalsIgnoreCase(destination))
                 .collect(Collectors.toList());
     }
+
+    //Opgave 3
+    public static List<FlightInfoDTO> sortByDepatureTime (List<FlightInfoDTO> flightInfoList, LocalDateTime time) {
+        return flightInfoList.stream()
+                .filter(f -> f.getDeparture().isAfter(time))
+                .collect(Collectors.toList());
+    }
+
+
 }
