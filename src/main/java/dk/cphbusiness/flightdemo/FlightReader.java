@@ -24,8 +24,14 @@ public class FlightReader {
             List<FlightInfoDTO> flightInfoDTOList = getFlightInfoDetails(flightList);
             flightInfoDTOList.forEach(System.out::println);
 
+            //Opgave 4.1
             Double result = totalFlightDurationByAirline(flightInfoDTOList, "Royal Jordanian");
-            System.out.println("Opgave 4.1 :" + result + "timer");
+            System.out.println("Opgave 4.1: " + result + " timer");
+
+            //Opgave 4.2
+            Double result2 = averageFlightTimeByAirline(flightInfoDTOList, "Royal Jordanian");
+            System.out.println("Opgave 4.2: " + result2 + " minutter");
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,5 +82,13 @@ public class FlightReader {
                 .filter(f -> f.getAirline().equals(airlineName))
                 .mapToDouble(f -> f.getDuration().toMinutes())
                 .sum()/60;
+    }
+
+    public static Double averageFlightTimeByAirline(List<FlightInfoDTO> flightInfoList, String airlineName) {
+        return flightInfoList.stream()
+                .filter(f -> f.getAirline() != null)
+                .filter(f -> f.getAirline().equals(airlineName))
+                .mapToDouble(f -> f.getDuration().toMinutes())
+                .average().orElse(0.0);
     }
 }
