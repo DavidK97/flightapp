@@ -23,6 +23,10 @@ public class FlightReader {
             List<FlightDTO> flightList = getFlightsFromFile("flights.json");
             List<FlightInfoDTO> flightInfoDTOList = getFlightInfoDetails(flightList);
             flightInfoDTOList.forEach(System.out::println);
+
+            Double result = totalFlightDurationByAirline(flightInfoDTOList, "Royal Jordanian");
+            System.out.println("Opgave 4.1 :" + result + "timer");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,26 +46,35 @@ public class FlightReader {
 
     public static List<FlightInfoDTO> getFlightInfoDetails(List<FlightDTO> flightList) {
         List<FlightInfoDTO> flightInfoList = flightList.stream()
-           .map(flight -> {
-                LocalDateTime departure = flight.getDeparture().getScheduled();
-                LocalDateTime arrival = flight.getArrival().getScheduled();
-                Duration duration = Duration.between(departure, arrival);
-                FlightInfoDTO flightInfo =
-                        FlightInfoDTO.builder()
-                            .name(flight.getFlight().getNumber())
-                            .iata(flight.getFlight().getIata())
-                            .airline(flight.getAirline().getName())
-                            .duration(duration)
-                            .departure(departure)
-                            .arrival(arrival)
-                            .origin(flight.getDeparture().getAirport())
-                            .destination(flight.getArrival().getAirport())
-                            .build();
+                .map(flight -> {
+                    LocalDateTime departure = flight.getDeparture().getScheduled();
+                    LocalDateTime arrival = flight.getArrival().getScheduled();
+                    Duration duration = Duration.between(departure, arrival);
+                    FlightInfoDTO flightInfo =
+                            FlightInfoDTO.builder()
+                                    .name(flight.getFlight().getNumber())
+                                    .iata(flight.getFlight().getIata())
+                                    .airline(flight.getAirline().getName())
+                                    .duration(duration)
+                                    .departure(departure)
+                                    .arrival(arrival)
+                                    .origin(flight.getDeparture().getAirport())
+                                    .destination(flight.getArrival().getAirport())
+                                    .build();
 
-                return flightInfo;
-            })
-        .toList();
+                    return flightInfo;
+                })
+                .toList();
         return flightInfoList;
     }
 
+
+
+    public static Double totalFlightDurationByAirline(List<FlightInfoDTO> flightInfoList, String airlineName) {
+        return flightInfoList.stream()
+                .filter(f -> f.getAirline() != null)
+                .filter(f -> f.getAirline().equals(airlineName))
+                .mapToDouble(f -> f.getDuration().toMinutes())
+                .sum()/60;
+    }
 }

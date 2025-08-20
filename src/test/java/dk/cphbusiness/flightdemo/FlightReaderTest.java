@@ -43,7 +43,8 @@ class FlightReaderTest {
             List<FlightDTO> flights = reader.getFlightsFromFile("flights.json");
             List<FlightInfoDTO> flightInfoList = reader.getFlightInfoDetails(flights);
             assertEquals("Royal Jordanian", flightInfoList.get(0).getAirline());
-
+            //TODO Opgave 3.6 Lige nu tester vi kun at det rigtige flynavn bliver hentet
+            // ,man kunne teste at mere af flydaten bliver hentet korrekt
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
